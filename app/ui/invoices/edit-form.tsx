@@ -9,7 +9,11 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { updateInvoice } from '@/app/lib/actions';
+
+//for validation
+import { updateInvoice, State } from '@/app/lib/actions';
+import { useActionState } from 'react';
+
 export default function EditInvoiceForm({
   invoice,
   customers,
@@ -17,9 +21,13 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
-  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+
+  //validation
+  const initialState: State = { message: null, errors: {} }; //no errors at the start
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id); //bind the id to the function
+  const [state, formAction] = useActionState(updateInvoiceWithId, initialState); //use the bound function
   return (
-    <form action={updateInvoiceWithId}>
+    <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
